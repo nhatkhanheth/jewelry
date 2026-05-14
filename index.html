@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Bảo Tú Nguyễn — Where Stories Are Forged</title>
+<meta name="description" content="Trang sức thủ công cao cấp — Bạc 925 & Vàng 18K. Mẫu có sẵn và đặt theo yêu cầu." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+<style>
+/* ===========================
+   CSS RESET + TOKENS
+   =========================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #0D0D0D;
+  --black-soft: #161616;
+  --black-line: #1f1f1f;
+  --gold: #C9A96E;
+  --gold-light: #E5C88A;
+  --gold-dark: #9F8550;
+  --silver: #C0C0C8;
+  --cream: #FAF8F4;
+  --cream-warm: #F0EBE0;
+  --text: #FAF8F4;
+  --text-mute: #8A8680;
+  --serif: 'Cormorant Garamond', serif;
+  --sans: 'DM Sans', sans-serif;
+  --ease: cubic-bezier(0.76, 0, 0.24, 1);
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--black);
+  color: var(--text);
+  overflow-x: hidden;
+  cursor: none;
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+@media (max-width: 768px) { body { cursor: auto; } }
+
+img { max-width: 100%; display: block; }
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: none; border: none; background: none; color: inherit; }
+@media (max-width: 768px) { button { cursor: pointer; } }
+
+::selection { background: var(--gold); color: var(--black); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: var(--black); }
+::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 4px; }
+
+/* ===========================
+   LOADER
+   =========================== */
+.loader {
+  position: fixed; inset: 0; background: var(--black);
+  z-index: 9999; display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 32px;
+  transition: opacity 0.8s var(--ease), visibility 0.8s var(--ease);
+}
+.loader.hidden { opacity: 0; visibility: hidden; }
+.loader-logo {
+  font-family: var(--serif); font-size: 48px; font-weight: 400; color: var(--gold);
+  letter-spacing: 0.05em; opacity: 0; animation: fadeUp 1.2s var(--ease-out) 0.2s forwards;
+}
+.loader-bar {
+  width: 200px; height: 1px; background: rgba(201, 169, 110, 0.2); overflow: hidden;
+}
+.loader-bar::after {
+  content: ''; display: block; height: 100%; background: var(--gold);
+  animation: loadBar 2.2s var(--ease) forwards;
+}
+@keyframes loadBar { 0% { width: 0; } 100% { width: 100%; } }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ===========================
+   CUSTOM CURSOR
+   =========================== */
+.cursor-dot, .cursor-ring {
+  position: fixed; top: 0; left: 0; pointer-events: none; z-index: 9998;
+  border-radius: 50%; transform: translate(-50%, -50%);
+  transition: width 0.3s var(--ease), height 0.3s var(--ease), background 0.3s var(--ease);
+}
+.cursor-dot { width: 6px; height: 6px; background: var(--gold); }
+.cursor-ring {
+  width: 36px; height: 36px; border: 1px solid var(--gold);
+  transition: width 0.4s var(--ease-out), height 0.4s var(--ease-out), background 0.4s var(--ease-out), opacity 0.3s;
+}
+.cursor-ring.hover { width: 80px; height: 80px; background: rgba(201, 169, 110, 0.1); }
+.cursor-ring.text-mode { width: 110px; height: 110px; background: var(--gold); mix-blend-mode: difference; }
+.cursor-text {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  font-family: var(--serif); font-style: italic; font-size: 14px; color: var(--black);
+  opacity: 0; transition: opacity 0.3s; white-space: nowrap;
+}
+.cursor-ring.text-mode .cursor-text { opacity: 1; }
+@media (max-width: 768px) { .cursor-dot, .cursor-ring { display: none; } }
+
+/* ===========================
+   NAVIGATION
+   =========================== */
+.nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 24px 48px; display: flex; align-items: center; justify-content: space-between;
+  transition: background 0.4s var(--ease), backdrop-filter 0.4s, padding 0.4s;
+  mix-blend-mode: difference;
+}
+.nav.scrolled {
+  padding: 16px 48px; background: rgba(13, 13, 13, 0.85);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  mix-blend-mode: normal; border-bottom: 1px solid var(--black-line);
+}
+.nav-logo {
+  font-family: var(--serif); font-size: 26px; font-weight: 500;
+  letter-spacing: 0.02em; color: var(--cream);
+}
+.nav-logo span { color: var(--gold); font-style: italic; }
+.nav-menu { display: flex; gap: 40px; align-items: center; }
+.nav-menu a {
+  font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em;
+  font-weight: 500; color: var(--cream); position: relative; padding: 8px 0;
+}
+.nav-menu a::after {
+  content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 1px;
+  background: var(--gold); transition: width 0.4s var(--ease);
+}
+.nav-menu a:hover::after { width: 100%; }
+.nav-actions { display: flex; gap: 20px; align-items: center; }
+.nav-icon {
+  width: 40px; height: 40px; border: 1px solid rgba(250, 248, 244, 0.2);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s var(--ease); position: relative;
+}
+.nav-icon:hover { border-color: var(--gold); background: rgba(201, 169, 110, 0.1); }
+.nav-icon svg { width: 16px; height: 16px; }
+.cart-badge {
+  position: absolute; top: -4px; right: -4px;
+  background: var(--gold); color: var(--black);
+  font-size: 10px; font-weight: 600; width: 18px; height: 18px;
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+}
+.menu-toggle { display: none; }
+@media (max-width: 900px) {
+  .nav { padding: 16px 20px; }
+  .nav-menu { display: none; }
+  .menu-toggle { display: flex; }
+}
+
+/* ===========================
+   HERO
+   =========================== */
+.hero {
+  height: 100vh; min-height: 700px; position: relative; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 1;
+  background: url('https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=1600&q=80') center/cover;
+  filter: brightness(0.5) contrast(1.1);
+  transform: scale(1.1);
+  animation: heroZoom 20s ease-in-out infinite alternate;
+}
+@keyframes heroZoom { from { transform: scale(1.1); } to { transform: scale(1.2); } }
+.hero-overlay {
+  position: absolute; inset: 0; z-index: 2;
+  background: linear-gradient(180deg, rgba(13,13,13,0.4) 0%, rgba(13,13,13,0.7) 100%);
+}
+.hero-noise {
+  position: absolute; inset: 0; z-index: 3; opacity: 0.04; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.hero-content {
+  position: relative; z-index: 4; text-align: center; padding: 0 24px;
+  max-width: 1100px;
+}
+.hero-eyebrow {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.4em;
+  color: var(--gold); margin-bottom: 32px; opacity: 0;
+  animation: fadeUp 1s var(--ease-out) 1.2s forwards;
+}
+.hero-eyebrow::before, .hero-eyebrow::after {
+  content: ''; display: inline-block; width: 30px; height: 1px;
+  background: var(--gold); vertical-align: middle; margin: 0 16px;
+}
+.hero-title {
+  font-family: var(--serif); font-size: clamp(48px, 9vw, 130px);
+  font-weight: 300; line-height: 0.95; letter-spacing: -0.02em;
+  margin-bottom: 32px;
+}
+.hero-title .word {
+  display: inline-block; opacity: 0; transform: translateY(60px);
+  animation: wordReveal 1.2s var(--ease-out) forwards;
+}
+.hero-title .word:nth-child(1) { animation-delay: 1.4s; }
+.hero-title .word:nth-child(2) { animation-delay: 1.55s; }
+.hero-title .word:nth-child(3) { animation-delay: 1.7s; }
+.hero-title em {
+  font-style: italic; color: var(--gold); font-weight: 400;
+}
+@keyframes wordReveal { to { opacity: 1; transform: translateY(0); } }
+.hero-sub {
+  font-size: 16px; color: var(--text-mute); max-width: 560px;
+  margin: 0 auto 48px; opacity: 0;
+  animation: fadeUp 1s var(--ease-out) 2s forwards;
+}
+.hero-cta {
+  display: inline-flex; gap: 20px; opacity: 0;
+  animation: fadeUp 1s var(--ease-out) 2.3s forwards;
+}
+.btn {
+  padding: 18px 36px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.2em;
+  font-weight: 500; transition: all 0.4s var(--ease); position: relative; overflow: hidden;
+  border: 1px solid transparent;
+}
+.btn-primary { background: var(--gold); color: var(--black); }
+.btn-primary:hover { background: var(--gold-light); letter-spacing: 0.25em; }
+.btn-ghost { border-color: var(--cream); color: var(--cream); }
+.btn-ghost:hover { background: var(--cream); color: var(--black); }
+.hero-scroll {
+  position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
+  z-index: 4; font-size: 10px; text-transform: uppercase; letter-spacing: 0.3em;
+  color: var(--text-mute); display: flex; flex-direction: column; align-items: center; gap: 12px;
+  opacity: 0; animation: fadeUp 1s var(--ease-out) 2.6s forwards;
+}
+.hero-scroll-line {
+  width: 1px; height: 40px; background: linear-gradient(180deg, var(--gold), transparent);
+  animation: scrollLine 2s ease-in-out infinite;
+}
+@keyframes scrollLine { 0%, 100% { transform: scaleY(1); transform-origin: top; } 50% { transform: scaleY(0.3); } }
+
+/* ===========================
+   MARQUEE
+   =========================== */
+.marquee {
+  background: var(--black); border-top: 1px solid var(--black-line);
+  border-bottom: 1px solid var(--black-line); overflow: hidden; padding: 28px 0;
+}
+.marquee-track {
+  display: flex; gap: 60px; white-space: nowrap;
+  animation: marqueeScroll 30s linear infinite;
+}
+.marquee-item {
+  font-family: var(--serif); font-size: 56px; font-weight: 400;
+  font-style: italic; color: var(--cream); display: flex; align-items: center; gap: 60px;
+}
+.marquee-item::after {
+  content: '✦'; color: var(--gold); font-size: 24px; font-style: normal;
+}
+@keyframes marqueeScroll { to { transform: translateX(-50%); } }
+
+/* ===========================
+   SECTION COMMON
+   =========================== */
+section { position: relative; }
+.container { max-width: 1400px; margin: 0 auto; padding: 0 48px; }
+@media (max-width: 768px) { .container { padding: 0 20px; } }
+.section-pad { padding: 140px 0; }
+.section-head { margin-bottom: 80px; text-align: center; }
+.eyebrow {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.4em;
+  color: var(--gold); margin-bottom: 24px; display: inline-block;
+}
+.eyebrow::before { content: '— '; }
+.eyebrow::after { content: ' —'; }
+.section-title {
+  font-family: var(--serif); font-size: clamp(40px, 6vw, 80px);
+  font-weight: 300; line-height: 1; letter-spacing: -0.02em;
+}
+.section-title em { font-style: italic; color: var(--gold); font-weight: 400; }
+.section-desc {
+  color: var(--text-mute); max-width: 600px; margin: 24px auto 0; font-size: 16px;
+}
+
+/* Reveal animations */
+.reveal { opacity: 0; transform: translateY(60px); transition: opacity 1s var(--ease-out), transform 1s var(--ease-out); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+
+/* ===========================
+   LOOKBOOK
+   =========================== */
+.lookbook { background: var(--black); }
+.lookbook-grid {
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 20px; min-height: 800px;
+}
+.look {
+  position: relative; overflow: hidden; cursor: none;
+}
+.look img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 1.4s var(--ease-out), filter 0.6s;
+  filter: brightness(0.85);
+}
+.look:hover img { transform: scale(1.08); filter: brightness(1); }
+.look-label {
+  position: absolute; bottom: 24px; left: 24px; z-index: 2;
+  font-family: var(--serif); font-style: italic; color: var(--cream);
+  font-size: 22px; transform: translateY(10px); opacity: 0;
+  transition: all 0.5s var(--ease-out);
+}
+.look:hover .look-label { transform: translateY(0); opacity: 1; }
+.look-1 { grid-column: span 5; grid-row: span 2; }
+.look-2 { grid-column: span 4; grid-row: span 1; }
+.look-3 { grid-column: span 3; grid-row: span 1; }
+.look-4 { grid-column: span 3; grid-row: span 1; }
+.look-5 { grid-column: span 4; grid-row: span 1; }
+@media (max-width: 768px) {
+  .lookbook-grid { grid-template-columns: repeat(2, 1fr); min-height: auto; }
+  .look { grid-column: span 1 !important; grid-row: span 1 !important; height: 240px; }
+  .look-1 { grid-column: span 2 !important; height: 360px; }
+}
+
+/* ===========================
+   PRODUCTS
+   =========================== */
+.products { background: var(--black); }
+.products-filter {
+  display: flex; gap: 32px; justify-content: center; margin-bottom: 60px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.25em;
+  color: var(--text-mute); padding: 10px 0; border-bottom: 1px solid transparent;
+  transition: all 0.3s;
+}
+.filter-btn.active, .filter-btn:hover { color: var(--gold); border-color: var(--gold); }
+
+.product-grid {
+  display: grid; grid-template-columns: repeat(12, 1fr); gap: 40px 24px;
+}
+.product {
+  position: relative; cursor: none;
+}
+.product-img {
+  position: relative; overflow: hidden; background: var(--black-soft);
+  aspect-ratio: 3/4; margin-bottom: 20px;
+}
+.product-img img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 1.2s var(--ease-out), opacity 0.6s;
+}
+.product:hover .product-img img { transform: scale(1.06); }
+.product-img::after {
+  content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, transparent 60%, rgba(13,13,13,0.6));
+  opacity: 0; transition: opacity 0.5s;
+}
+.product:hover .product-img::after { opacity: 1; }
+.product-tag {
+  position: absolute; top: 16px; left: 16px; z-index: 2;
+  background: var(--gold); color: var(--black);
+  font-size: 10px; padding: 6px 12px; letter-spacing: 0.15em;
+  text-transform: uppercase; font-weight: 600;
+}
+.product-actions {
+  position: absolute; bottom: 16px; left: 16px; right: 16px; z-index: 2;
+  display: flex; gap: 8px; transform: translateY(20px); opacity: 0;
+  transition: all 0.5s var(--ease-out);
+}
+.product:hover .product-actions { transform: translateY(0); opacity: 1; }
+.product-action {
+  flex: 1; background: var(--cream); color: var(--black);
+  padding: 12px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em;
+  font-weight: 600; transition: all 0.3s; text-align: center;
+}
+.product-action:hover { background: var(--gold); }
+.product-action.icon { flex: 0 0 44px; padding: 12px 0; display: flex; align-items: center; justify-content: center; }
+.product-action svg { width: 16px; height: 16px; }
+.product-name {
+  font-family: var(--serif); font-size: 24px; font-weight: 400;
+  margin-bottom: 6px;
+}
+.product-meta { display: flex; justify-content: space-between; align-items: center; }
+.product-material {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--text-mute);
+}
+.product-price { font-size: 16px; color: var(--gold); font-weight: 500; }
+.product-price s { color: var(--text-mute); margin-right: 8px; font-weight: 300; }
+
+/* Asymmetric grid */
+.p-1 { grid-column: span 4; }
+.p-2 { grid-column: span 4; margin-top: 60px; }
+.p-3 { grid-column: span 4; }
+.p-4 { grid-column: span 3; }
+.p-5 { grid-column: span 5; margin-top: 40px; }
+.p-6 { grid-column: span 4; }
+@media (max-width: 900px) {
+  .product-grid { grid-template-columns: repeat(2, 1fr); }
+  .product { grid-column: span 1 !important; margin-top: 0 !important; }
+}
+@media (max-width: 500px) {
+  .product-grid { grid-template-columns: 1fr; }
+}
+
+/* ===========================
+   CUSTOM ORDER
+   =========================== */
+.custom {
+  background: linear-gradient(180deg, var(--black) 0%, #0a0a0a 100%);
+  position: relative; overflow: hidden;
+}
+.custom::before {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  transform: translate(-50%, -50%); width: 800px; height: 800px;
+  background: radial-gradient(circle, rgba(201,169,110,0.08), transparent 70%);
+  pointer-events: none;
+}
+.custom-steps {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px;
+  position: relative; z-index: 2;
+}
+.step {
+  text-align: center; padding: 48px 32px; border: 1px solid var(--black-line);
+  background: rgba(22, 22, 22, 0.4); backdrop-filter: blur(10px);
+  transition: all 0.5s var(--ease);
+}
+.step:hover { border-color: var(--gold); transform: translateY(-8px); }
+.step-num {
+  font-family: var(--serif); font-size: 80px; font-weight: 300;
+  color: var(--gold); line-height: 1; font-style: italic; margin-bottom: 24px;
+}
+.step-title {
+  font-family: var(--serif); font-size: 28px; font-weight: 400; margin-bottom: 16px;
+}
+.step-desc { color: var(--text-mute); font-size: 14px; line-height: 1.7; }
+.custom-cta { text-align: center; margin-top: 60px; }
+@media (max-width: 768px) { .custom-steps { grid-template-columns: 1fr; } }
+
+/* ===========================
+   PERIODIC ELEMENTS Au / Ag
+   =========================== */
+.elements { background: var(--black); }
+.elements-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px; max-width: 900px; margin: 0 auto;
+}
+.element {
+  border: 2px solid; padding: 60px 40px; aspect-ratio: 1; position: relative;
+  display: flex; flex-direction: column; justify-content: space-between;
+  transition: all 0.5s var(--ease); overflow: hidden; cursor: none;
+}
+.element-gold { border-color: var(--gold); background: linear-gradient(135deg, rgba(201,169,110,0.05), transparent); }
+.element-silver { border-color: var(--silver); background: linear-gradient(135deg, rgba(192,192,200,0.05), transparent); }
+.element:hover { transform: scale(1.02); }
+.element-top { display: flex; justify-content: space-between; font-size: 14px; }
+.element-number { color: var(--text-mute); }
+.element-mass { color: var(--text-mute); }
+.element-symbol {
+  font-family: var(--serif); font-size: clamp(80px, 14vw, 140px);
+  font-weight: 300; line-height: 1; text-align: center; flex: 1;
+  display: flex; align-items: center; justify-content: center; position: relative;
+}
+.element-gold .element-symbol { color: var(--gold); }
+.element-silver .element-symbol { color: var(--silver); }
+.element-name {
+  font-family: var(--serif); font-size: 22px; text-align: center;
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.element-purity { text-align: center; font-size: 11px; color: var(--text-mute); letter-spacing: 0.3em; margin-top: 8px; text-transform: uppercase; }
+
+/* Electron orbit */
+.orbit {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  border-radius: 50%; border: 1px dashed; pointer-events: none;
+}
+.orbit-1 { width: 70%; height: 70%; animation: spin 8s linear infinite; }
+.orbit-2 { width: 90%; height: 90%; animation: spin 12s linear infinite reverse; }
+.element-gold .orbit { border-color: rgba(201,169,110,0.2); }
+.element-silver .orbit { border-color: rgba(192,192,200,0.2); }
+.electron {
+  position: absolute; width: 8px; height: 8px; border-radius: 50%;
+  top: -4px; left: 50%; margin-left: -4px;
+  box-shadow: 0 0 12px currentColor;
+}
+.element-gold .electron { background: var(--gold); color: var(--gold); }
+.element-silver .electron { background: var(--silver); color: var(--silver); }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 768px) { .elements-grid { grid-template-columns: 1fr; gap: 24px; } }
+
+/* ===========================
+   STORY / ABOUT
+   =========================== */
+.story {
+  background: var(--cream); color: var(--black);
+  padding: 140px 0;
+}
+.story .eyebrow { color: var(--gold-dark); }
+.story-grid {
+  display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: center;
+}
+.story-img {
+  aspect-ratio: 3/4; overflow: hidden; position: relative;
+}
+.story-img img { width: 100%; height: 100%; object-fit: cover; }
+.story-img::after {
+  content: ''; position: absolute; inset: 0;
+  border: 1px solid var(--gold); transform: translate(20px, 20px);
+  pointer-events: none;
+}
+.story-title {
+  font-family: var(--serif); font-size: clamp(36px, 5vw, 64px);
+  font-weight: 300; line-height: 1.05; margin-bottom: 32px;
+  color: var(--black); letter-spacing: -0.02em;
+}
+.story-title em { font-style: italic; color: var(--gold-dark); }
+.story-text { color: #444; font-size: 16px; margin-bottom: 24px; line-height: 1.8; }
+.story-text:first-letter {
+  font-family: var(--serif); font-size: 64px; float: left;
+  line-height: 0.85; padding: 8px 12px 0 0; color: var(--gold-dark); font-style: italic;
+}
+.story-stats {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  margin-top: 48px; padding-top: 48px; border-top: 1px solid rgba(0,0,0,0.1);
+}
+.stat-num {
+  font-family: var(--serif); font-size: 48px; color: var(--gold-dark);
+  font-weight: 400; line-height: 1; font-style: italic;
+}
+.stat-label {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.2em;
+  color: #666; margin-top: 8px;
+}
+@media (max-width: 900px) { .story-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+/* ===========================
+   CARE GUIDE
+   =========================== */
+.care { background: var(--black); }
+.care-grid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px;
+}
+.care-card {
+  padding: 40px 28px; border: 1px solid var(--black-line);
+  background: var(--black-soft); transition: all 0.5s var(--ease);
+}
+.care-card:hover { border-color: var(--gold); background: rgba(201,169,110,0.04); }
+.care-icon {
+  width: 56px; height: 56px; border: 1px solid var(--gold); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
+  color: var(--gold);
+}
+.care-icon svg { width: 24px; height: 24px; }
+.care-card h4 { font-family: var(--serif); font-size: 22px; font-weight: 400; margin-bottom: 12px; }
+.care-card p { color: var(--text-mute); font-size: 14px; line-height: 1.7; }
+@media (max-width: 900px) { .care-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 500px) { .care-grid { grid-template-columns: 1fr; } }
+
+/* ===========================
+   REVIEWS
+   =========================== */
+.reviews { background: var(--black); }
+.reviews-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+}
+.review {
+  padding: 40px 32px; border: 1px solid var(--black-line);
+  background: rgba(22,22,22,0.5); position: relative;
+}
+.review-quote {
+  font-family: var(--serif); font-size: 80px; line-height: 0.5;
+  color: var(--gold); position: absolute; top: 32px; right: 32px;
+  font-style: italic; opacity: 0.4;
+}
+.review-stars { color: var(--gold); margin-bottom: 16px; letter-spacing: 4px; }
+.review-text {
+  font-family: var(--serif); font-style: italic; font-size: 18px;
+  line-height: 1.6; color: var(--cream); margin-bottom: 24px;
+}
+.review-author { display: flex; align-items: center; gap: 16px; }
+.review-avatar {
+  width: 48px; height: 48px; border-radius: 50%; overflow: hidden;
+  border: 1px solid var(--gold);
+}
+.review-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.review-name { font-weight: 500; font-size: 14px; }
+.review-product { font-size: 11px; color: var(--text-mute); text-transform: uppercase; letter-spacing: 0.15em; }
+.review-images { display: flex; gap: 8px; margin-top: 20px; }
+.review-img-thumb { width: 60px; height: 60px; overflow: hidden; }
+.review-img-thumb img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+.review-img-thumb:hover img { transform: scale(1.15); }
+@media (max-width: 900px) { .reviews-grid { grid-template-columns: 1fr; } }
+
+/* ===========================
+   GIFT PACKAGING
+   =========================== */
+.gift {
+  background: linear-gradient(180deg, var(--black) 0%, #0a0a0a 100%);
+  position: relative;
+}
+.gift-grid {
+  display: grid; grid-template-columns: 1.3fr 1fr; gap: 80px; align-items: center;
+}
+.gift-img {
+  aspect-ratio: 4/5; overflow: hidden; position: relative;
+}
+.gift-img img { width: 100%; height: 100%; object-fit: cover; }
+.gift-content h3 {
+  font-family: var(--serif); font-size: clamp(36px, 5vw, 56px);
+  font-weight: 300; line-height: 1.05; margin-bottom: 24px; letter-spacing: -0.02em;
+}
+.gift-content h3 em { color: var(--gold); font-style: italic; }
+.gift-content p { color: var(--text-mute); margin-bottom: 32px; font-size: 16px; line-height: 1.8; }
+.gift-list { list-style: none; margin-bottom: 40px; }
+.gift-list li {
+  padding: 16px 0; border-bottom: 1px solid var(--black-line);
+  display: flex; align-items: center; gap: 16px; font-size: 14px;
+}
+.gift-list li svg { color: var(--gold); flex-shrink: 0; width: 18px; height: 18px; }
+@media (max-width: 900px) { .gift-grid { grid-template-columns: 1fr; } }
+
+/* ===========================
+   FAQ
+   =========================== */
+.faq { background: var(--black); }
+.faq-list { max-width: 900px; margin: 0 auto; }
+.faq-item {
+  border-bottom: 1px solid var(--black-line); padding: 28px 0; cursor: none;
+  transition: all 0.3s;
+}
+.faq-q {
+  display: flex; justify-content: space-between; align-items: center;
+  font-family: var(--serif); font-size: 24px; font-weight: 400;
+}
+.faq-toggle {
+  width: 32px; height: 32px; border: 1px solid var(--gold); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; color: var(--gold);
+  transition: transform 0.4s var(--ease); flex-shrink: 0;
+}
+.faq-item.open .faq-toggle { transform: rotate(45deg); background: var(--gold); color: var(--black); }
+.faq-a {
+  max-height: 0; overflow: hidden; transition: max-height 0.5s var(--ease), padding 0.4s;
+  color: var(--text-mute); line-height: 1.8;
+}
+.faq-item.open .faq-a { max-height: 300px; padding-top: 20px; }
+
+/* ===========================
+   NEWSLETTER
+   =========================== */
+.newsletter {
+  background: var(--gold); color: var(--black); padding: 100px 0;
+  position: relative; overflow: hidden;
+}
+.newsletter-bg {
+  position: absolute; inset: 0; opacity: 0.1;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 0L36 24L60 30L36 36L30 60L24 36L0 30L24 24Z' fill='%230D0D0D'/%3E%3C/svg%3E");
+}
+.newsletter-content { text-align: center; position: relative; z-index: 2; }
+.newsletter h3 {
+  font-family: var(--serif); font-size: clamp(36px, 6vw, 64px);
+  font-weight: 300; line-height: 1.05; margin-bottom: 16px;
+}
+.newsletter h3 em { font-style: italic; }
+.newsletter p { margin-bottom: 40px; opacity: 0.8; }
+.newsletter-form {
+  display: flex; gap: 0; max-width: 500px; margin: 0 auto;
+  border-bottom: 1px solid var(--black);
+}
+.newsletter-form input {
+  flex: 1; background: transparent; border: none; padding: 16px 0;
+  font-size: 16px; color: var(--black); font-family: inherit; outline: none;
+}
+.newsletter-form input::placeholder { color: rgba(13,13,13,0.5); }
+.newsletter-form button {
+  background: transparent; padding: 16px 24px; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.2em; font-weight: 600;
+}
+
+/* ===========================
+   FOOTER
+   =========================== */
+.footer {
+  background: var(--black); padding: 100px 0 40px;
+  border-top: 1px solid var(--black-line);
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 60px;
+  margin-bottom: 60px;
+}
+.footer-brand h4 {
+  font-family: var(--serif); font-size: 32px; font-weight: 400;
+  margin-bottom: 20px;
+}
+.footer-brand h4 em { color: var(--gold); font-style: italic; }
+.footer-brand p { color: var(--text-mute); margin-bottom: 24px; max-width: 320px; }
+.footer-social { display: flex; gap: 12px; }
+.footer-social a {
+  width: 40px; height: 40px; border: 1px solid var(--black-line);
+  border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s; color: var(--text-mute);
+}
+.footer-social a:hover { border-color: var(--gold); color: var(--gold); }
+.footer-social svg { width: 16px; height: 16px; }
+.footer-col h5 {
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.3em;
+  color: var(--gold); margin-bottom: 24px;
+}
+.footer-col ul { list-style: none; }
+.footer-col li { margin-bottom: 12px; }
+.footer-col a { color: var(--text-mute); font-size: 14px; transition: color 0.3s; }
+.footer-col a:hover { color: var(--cream); }
+.footer-bottom {
+  padding-top: 32px; border-top: 1px solid var(--black-line);
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text-mute);
+}
+@media (max-width: 900px) { .footer-grid { grid-template-columns: 1fr 1fr; } .footer-brand { grid-column: span 2; } }
+@media (max-width: 500px) { .footer-grid { grid-template-columns: 1fr; } .footer-brand { grid-column: span 1; } .footer-bottom { flex-direction: column; gap: 12px; } }
+
+/* ===========================
+   PRODUCT MODAL
+   =========================== */
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(13,13,13,0.85);
+  backdrop-filter: blur(20px); z-index: 200;
+  opacity: 0; visibility: hidden; transition: all 0.4s var(--ease);
+}
+.modal-backdrop.open { opacity: 1; visibility: visible; }
+.modal {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
+  width: 90%; max-width: 1100px; max-height: 90vh; overflow-y: auto;
+  background: var(--black); border: 1px solid var(--gold); z-index: 201;
+  opacity: 0; visibility: hidden; transition: all 0.5s var(--ease-out);
+}
+.modal.open { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+.modal-close {
+  position: absolute; top: 20px; right: 20px; width: 44px; height: 44px;
+  border-radius: 50%; border: 1px solid var(--gold); color: var(--gold);
+  display: flex; align-items: center; justify-content: center; z-index: 10;
+  transition: all 0.3s;
+}
+.modal-close:hover { background: var(--gold); color: var(--black); transform: rotate(90deg); }
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; }
+.modal-imgs { position: relative; background: var(--black-soft); }
+.modal-img-main { aspect-ratio: 1; overflow: hidden; cursor: zoom-in; }
+.modal-img-main img {
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform 0.4s var(--ease);
+}
+.modal-img-main.zoomed img { transform: scale(2); cursor: zoom-out; }
+.modal-thumbs { display: flex; gap: 8px; padding: 12px; }
+.modal-thumb {
+  width: 60px; height: 60px; overflow: hidden; opacity: 0.5; transition: opacity 0.3s;
+  border: 1px solid transparent;
+}
+.modal-thumb.active, .modal-thumb:hover { opacity: 1; border-color: var(--gold); }
+.modal-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.modal-info { padding: 48px; }
+.modal-tag {
+  display: inline-block; font-size: 10px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--gold); margin-bottom: 16px;
+}
+.modal-name {
+  font-family: var(--serif); font-size: 42px; font-weight: 400;
+  line-height: 1.1; margin-bottom: 16px;
+}
+.modal-price {
+  font-size: 22px; color: var(--gold); margin-bottom: 24px; font-weight: 500;
+}
+.modal-story {
+  font-family: var(--serif); font-style: italic; color: var(--text-mute);
+  font-size: 16px; line-height: 1.7; padding: 20px; border-left: 2px solid var(--gold);
+  margin-bottom: 28px; background: rgba(201,169,110,0.04);
+}
+.modal-spec { margin-bottom: 28px; }
+.modal-spec h5 {
+  font-size: 11px; letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.modal-spec-row {
+  display: flex; justify-content: space-between; padding: 10px 0;
+  border-bottom: 1px solid var(--black-line); font-size: 14px;
+}
+.modal-spec-row span:first-child { color: var(--text-mute); }
+.modal-sizes { display: flex; gap: 8px; margin-bottom: 28px; flex-wrap: wrap; }
+.size {
+  min-width: 44px; padding: 10px 14px; border: 1px solid var(--black-line);
+  font-size: 12px; transition: all 0.3s; text-align: center;
+}
+.size:hover, .size.active { border-color: var(--gold); color: var(--gold); }
+.modal-actions { display: flex; gap: 12px; }
+.modal-actions .btn { flex: 1; }
+@media (max-width: 800px) { .modal-grid { grid-template-columns: 1fr; } .modal-info { padding: 32px 24px; } }
+
+/* ===========================
+   CART DRAWER
+   =========================== */
+.drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; width: 480px; max-width: 90vw;
+  background: var(--black); border-left: 1px solid var(--gold);
+  z-index: 202; transform: translateX(100%); transition: transform 0.5s var(--ease);
+  display: flex; flex-direction: column;
+}
+.drawer.open { transform: translateX(0); }
+.drawer-head {
+  padding: 28px; display: flex; justify-content: space-between;
+  align-items: center; border-bottom: 1px solid var(--black-line);
+}
+.drawer-head h3 { font-family: var(--serif); font-size: 28px; font-weight: 400; }
+.drawer-body { flex: 1; overflow-y: auto; padding: 28px; }
+.cart-empty {
+  text-align: center; padding: 60px 20px; color: var(--text-mute);
+}
+.cart-empty svg { width: 64px; height: 64px; margin: 0 auto 24px; color: var(--gold); opacity: 0.4; }
+.cart-item {
+  display: grid; grid-template-columns: 80px 1fr auto; gap: 16px;
+  padding: 20px 0; border-bottom: 1px solid var(--black-line);
+}
+.cart-item-img { width: 80px; height: 80px; overflow: hidden; }
+.cart-item-img img { width: 100%; height: 100%; object-fit: cover; }
+.cart-item-name { font-family: var(--serif); font-size: 18px; margin-bottom: 4px; }
+.cart-item-meta { font-size: 12px; color: var(--text-mute); margin-bottom: 8px; }
+.cart-item-price { color: var(--gold); font-size: 14px; }
+.drawer-foot {
+  padding: 28px; border-top: 1px solid var(--black-line);
+}
+.cart-total {
+  display: flex; justify-content: space-between; margin-bottom: 20px;
+  font-family: var(--serif); font-size: 24px;
+}
+.cart-total span:last-child { color: var(--gold); }
+
+/* ===========================
+   ANIMATIONS HELPERS
+   =========================== */
+.split-char { display: inline-block; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div class="loader" id="loader">
+  <div class="loader-logo">Bảo Tú Nguyễn</div>
+  <div class="loader-bar"></div>
+</div>
+
+<!-- CURSOR -->
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="cursor-ring" id="cursorRing"><span class="cursor-text" id="cursorText">View</span></div>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <div class="nav-logo">Bảo Tú <span>Nguyên</span></div>
+  <div class="nav-menu">
+    <a href="#products" data-hover>Bộ Sưu Tập</a>
+    <a href="#custom" data-hover>Đặt Riêng</a>
+    <a href="#story" data-hover>Câu Chuyện</a>
+    <a href="#care" data-hover>Bảo Quản</a>
+    <a href="#faq" data-hover>Liên Hệ</a>
+  </div>
+  <div class="nav-actions">
+    <button class="nav-icon" data-hover aria-label="Tìm kiếm"><i data-lucide="search"></i></button>
+    <button class="nav-icon" data-hover aria-label="Yêu thích"><i data-lucide="heart"></i></button>
+    <button class="nav-icon" id="cartBtn" data-hover aria-label="Giỏ hàng">
+      <i data-lucide="shopping-bag"></i>
+      <span class="cart-badge" id="cartBadge">2</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-noise"></div>
+  <div class="hero-content">
+    <div class="hero-eyebrow">Bộ Sưu Tập 2026</div>
+    <h1 class="hero-title">
+      <span class="word">Where</span>
+      <span class="word"><em>Stories</em></span>
+      <span class="word">Are Forged</span>
+    </h1>
+    <p class="hero-sub">Mỗi món trang sức là một tác phẩm thủ công — kết tinh từ bạc 925 và vàng 18K, được chế tác bởi đôi tay của nghệ nhân Việt.</p>
+    <div class="hero-cta">
+      <a href="#products" class="btn btn-primary" data-hover>Khám Phá</a>
+      <a href="#custom" class="btn btn-ghost" data-hover>Đặt Riêng</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Cuộn xuống</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="marquee-item">Handcrafted in Vietnam</span>
+    <span class="marquee-item">Bạc 925 · Vàng 18K</span>
+    <span class="marquee-item">Đặt Riêng Theo Yêu Cầu</span>
+    <span class="marquee-item">Bảo Hành Trọn Đời</span>
+    <span class="marquee-item">Handcrafted in Vietnam</span>
+    <span class="marquee-item">Bạc 925 · Vàng 18K</span>
+    <span class="marquee-item">Đặt Riêng Theo Yêu Cầu</span>
+    <span class="marquee-item">Bảo Hành Trọn Đời</span>
+  </div>
+</div>
+
+<!-- LOOKBOOK -->
+<section class="lookbook section-pad">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Lookbook</span>
+      <h2 class="section-title">Vẻ đẹp <em>được kể</em></h2>
+      <p class="section-desc">Những khoảnh khắc nơi trang sức trở thành ngôn ngữ riêng — phong cách, cá tính và bản sắc.</p>
+    </div>
+    <div class="lookbook-grid reveal">
+      <div class="look look-1" data-hover-text="Editorial">
+        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=900&q=80" alt="Lookbook 1" loading="lazy" />
+        <div class="look-label">Editorial · 01</div>
+      </div>
+      <div class="look look-2" data-hover-text="Minimal">
+        <img src="https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?w=700&q=80" alt="Lookbook 2" loading="lazy" />
+        <div class="look-label">Minimal · 02</div>
+      </div>
+      <div class="look look-3" data-hover-text="Bold">
+        <img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=500&q=80" alt="Lookbook 3" loading="lazy" />
+        <div class="look-label">Bold · 03</div>
+      </div>
+      <div class="look look-4" data-hover-text="Romance">
+        <img src="https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=500&q=80" alt="Lookbook 4" loading="lazy" />
+        <div class="look-label">Romance · 04</div>
+      </div>
+      <div class="look look-5" data-hover-text="Modern">
+        <img src="https://images.unsplash.com/photo-1633934542430-0905ccb5f050?w=700&q=80" alt="Lookbook 5" loading="lazy" />
+        <div class="look-label">Modern · 05</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="products section-pad" id="products">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Bộ Sưu Tập</span>
+      <h2 class="section-title">Tuyển chọn <em>tinh hoa</em></h2>
+      <p class="section-desc">Sáu thiết kế nổi bật — mỗi món mang một câu chuyện, một cảm hứng riêng.</p>
+    </div>
+
+    <div class="products-filter reveal">
+      <button class="filter-btn active" data-hover>Tất cả</button>
+      <button class="filter-btn" data-hover>Nhẫn</button>
+      <button class="filter-btn" data-hover>Dây chuyền</button>
+      <button class="filter-btn" data-hover>Bông tai</button>
+      <button class="filter-btn" data-hover>Vòng tay</button>
+    </div>
+
+    <div class="product-grid">
+      <!-- Product cards generated below -->
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOM ORDER -->
+<section class="custom section-pad" id="custom">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Đặt Riêng</span>
+      <h2 class="section-title">Tác phẩm <em>của riêng bạn</em></h2>
+      <p class="section-desc">Ba bước đơn giản để biến ý tưởng thành món trang sức độc bản.</p>
+    </div>
+    <div class="custom-steps reveal">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h3 class="step-title">Chia sẻ ý tưởng</h3>
+        <p class="step-desc">Gửi cho chúng tôi cảm hứng, hình ảnh tham khảo, kích thước và ngân sách dự kiến. Bạn có thể mô tả bằng lời hoặc vẽ tay — chúng tôi đều hiểu.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h3 class="step-title">Phác thảo & duyệt</h3>
+        <p class="step-desc">Đội ngũ thiết kế sẽ phác thảo 2–3 phương án trong 3–5 ngày. Chỉnh sửa thoải mái đến khi bạn ưng ý hoàn toàn.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h3 class="step-title">Chế tác & trao tay</h3>
+        <p class="step-desc">Nghệ nhân sẽ chế tác trong 10–21 ngày, đóng gói trong hộp gỗ cao cấp kèm giấy chứng nhận, giao tận tay bạn.</p>
+      </div>
+    </div>
+    <div class="custom-cta reveal">
+      <a href="#" class="btn btn-primary" data-hover>Bắt đầu đặt riêng</a>
+    </div>
+  </div>
+</section>
+
+<!-- ELEMENTS -->
+<section class="elements section-pad">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Chất Liệu</span>
+      <h2 class="section-title">Tinh khiết <em>nguyên tố</em></h2>
+      <p class="section-desc">Chúng tôi chỉ làm việc với hai kim loại quý — minh bạch về độ tinh khiết và nguồn gốc.</p>
+    </div>
+    <div class="elements-grid reveal">
+      <div class="element element-gold" data-hover>
+        <div class="orbit orbit-1"><div class="electron"></div></div>
+        <div class="orbit orbit-2"><div class="electron"></div></div>
+        <div class="element-top">
+          <span class="element-number">79</span>
+          <span class="element-mass">196.97</span>
+        </div>
+        <div class="element-symbol">Au</div>
+        <div>
+          <div class="element-name">Aurum</div>
+          <div class="element-purity">Vàng 18K · 75% tinh khiết</div>
+        </div>
+      </div>
+      <div class="element element-silver" data-hover>
+        <div class="orbit orbit-1"><div class="electron"></div></div>
+        <div class="orbit orbit-2"><div class="electron"></div></div>
+        <div class="element-top">
+          <span class="element-number">47</span>
+          <span class="element-mass">107.87</span>
+        </div>
+        <div class="element-symbol">Ag</div>
+        <div>
+          <div class="element-name">Argentum</div>
+          <div class="element-purity">Bạc 925 · 92.5% tinh khiết</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STORY -->
+<section class="story" id="story">
+  <div class="container">
+    <div class="story-grid">
+      <div class="story-img reveal">
+        <img src="https://images.unsplash.com/photo-1617038260897-41a1f14a8ca0?w=800&q=80" alt="Nghệ nhân chế tác" loading="lazy" />
+      </div>
+      <div class="reveal">
+        <span class="eyebrow">Câu chuyện của chúng tôi</span>
+        <h2 class="story-title">Mỗi tác phẩm <em>là một câu chuyện</em> được rèn nên bằng lửa và thời gian</h2>
+        <p class="story-text">Bảo Tú Nguyễn ra đời từ niềm tin rằng trang sức không chỉ để đeo — mà để kể chuyện. Mỗi đường nét chạm khắc, mỗi hạt đá được đặt, đều mang theo cảm xúc và ý nghĩa của người sở hữu.</p>
+        <p class="story-text">Chúng tôi từ chối làm hàng loạt. Mỗi món được hoàn thiện bởi đôi tay nghệ nhân tại xưởng Sài Gòn, sử dụng kỹ thuật truyền thống kết hợp thẩm mỹ đương đại.</p>
+        <div class="story-stats">
+          <div>
+            <div class="stat-num">2019</div>
+            <div class="stat-label">Năm thành lập</div>
+          </div>
+          <div>
+            <div class="stat-num">1,200+</div>
+            <div class="stat-label">Tác phẩm đã rèn</div>
+          </div>
+          <div>
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Thủ công Việt</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CARE GUIDE -->
+<section class="care section-pad" id="care">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Bảo Quản</span>
+      <h2 class="section-title">Gìn giữ <em>vẻ đẹp</em></h2>
+      <p class="section-desc">Bốn nguyên tắc đơn giản để trang sức của bạn luôn rạng rỡ theo năm tháng.</p>
+    </div>
+    <div class="care-grid reveal">
+      <div class="care-card">
+        <div class="care-icon"><i data-lucide="droplets"></i></div>
+        <h4>Tránh nước & hóa chất</h4>
+        <p>Tháo trang sức khi tắm, bơi, dùng nước hoa, kem chống nắng — để tránh xỉn màu và ăn mòn bề mặt.</p>
+      </div>
+      <div class="care-card">
+        <div class="care-icon"><i data-lucide="sparkles"></i></div>
+        <h4>Lau bằng khăn mềm</h4>
+        <p>Sau mỗi lần đeo, lau nhẹ bằng khăn microfiber để loại bỏ mồ hôi, dầu — giữ độ sáng bóng tự nhiên.</p>
+      </div>
+      <div class="care-card">
+        <div class="care-icon"><i data-lucide="box"></i></div>
+        <h4>Bảo quản riêng</h4>
+        <p>Đặt từng món trong túi vải hoặc ngăn riêng để tránh trầy xước, va đập với các vật cứng khác.</p>
+      </div>
+      <div class="care-card">
+        <div class="care-icon"><i data-lucide="wand-sparkles"></i></div>
+        <h4>Đánh bóng định kỳ</h4>
+        <p>Mang đến shop 6 tháng/lần để được làm sáng miễn phí trọn đời — chúng tôi chăm sóc tác phẩm của bạn.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section class="reviews section-pad">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">Cảm Nhận</span>
+      <h2 class="section-title">Khách hàng <em>nói gì</em></h2>
+    </div>
+    <div class="reviews-grid reveal">
+      <div class="review">
+        <div class="review-quote">"</div>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Mình đặt nhẫn cưới custom — từ phác thảo đến nhận thành phẩm chỉ 18 ngày. Chất lượng vàng đúng chuẩn, đường nét tinh xảo hơn mong đợi.</p>
+        <div class="review-author">
+          <div class="review-avatar"><img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="" /></div>
+          <div>
+            <div class="review-name">Mai Anh</div>
+            <div class="review-product">Nhẫn cưới custom · Vàng 18K</div>
+          </div>
+        </div>
+        <div class="review-images">
+          <div class="review-img-thumb"><img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=200&q=80" alt="" /></div>
+          <div class="review-img-thumb"><img src="https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=200&q=80" alt="" /></div>
+        </div>
+      </div>
+      <div class="review">
+        <div class="review-quote">"</div>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Shop tư vấn rất tận tâm, mình đắn đo mãi giữa 2 mẫu thì được gợi ý option thứ 3 hợp với mặt mình hơn. Đeo lên ai cũng khen.</p>
+        <div class="review-author">
+          <div class="review-avatar"><img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" alt="" /></div>
+          <div>
+            <div class="review-name">Linh Đan</div>
+            <div class="review-product">Bông tai · Bạc 925</div>
+          </div>
+        </div>
+        <div class="review-images">
+          <div class="review-img-thumb"><img src="https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?w=200&q=80" alt="" /></div>
+        </div>
+      </div>
+      <div class="review">
+        <div class="review-quote">"</div>
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">Hộp đựng đẹp xuất sắc, mở ra thấy như nhận quà từ nước ngoài. Mình mua làm quà sinh nhật cho bạn, bạn mê tít. Sẽ ủng hộ tiếp.</p>
+        <div class="review-author">
+          <div class="review-avatar"><img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&q=80" alt="" /></div>
+          <div>
+            <div class="review-name">Quốc Bảo</div>
+            <div class="review-product">Dây chuyền · Vàng 18K</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GIFT PACKAGING -->
+<section class="gift section-pad">
+  <div class="container">
+    <div class="gift-grid">
+      <div class="gift-img reveal">
+        <img src="https://images.unsplash.com/photo-1607703703520-bb638e84caf2?w=900&q=80" alt="Hộp quà cao cấp" loading="lazy" />
+      </div>
+      <div class="gift-content reveal">
+        <span class="eyebrow">Gói Quà</span>
+        <h3>Trao tặng <em>theo cách</em> tinh tế nhất</h3>
+        <p>Mỗi đơn hàng đều được đóng gói trong hộp gỗ cao cấp với lớp lót nhung — sẵn sàng cho khoảnh khắc trao tay.</p>
+        <ul class="gift-list">
+          <li><i data-lucide="check"></i> Hộp gỗ khắc logo + dây ruy băng lụa</li>
+          <li><i data-lucide="check"></i> Thiệp viết tay theo yêu cầu (miễn phí)</li>
+          <li><i data-lucide="check"></i> Giấy chứng nhận chất liệu kèm theo</li>
+          <li><i data-lucide="check"></i> Khăn lau microfiber bảo dưỡng</li>
+          <li><i data-lucide="check"></i> Giao hỏa tốc nội thành — miễn phí trên 2tr</li>
+        </ul>
+        <a href="#products" class="btn btn-primary" data-hover>Chọn quà tặng</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq section-pad" id="faq">
+  <div class="container">
+    <div class="section-head reveal">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="section-title">Câu hỏi <em>thường gặp</em></h2>
+    </div>
+    <div class="faq-list reveal">
+      <div class="faq-item" data-hover>
+        <div class="faq-q">
+          <span>Thời gian chế tác đơn custom là bao lâu?</span>
+          <div class="faq-toggle"><i data-lucide="plus"></i></div>
+        </div>
+        <div class="faq-a">Thông thường 10–21 ngày kể từ khi duyệt phác thảo cuối cùng. Các mẫu phức tạp có đá quý hoặc khắc tay có thể lâu hơn — chúng tôi sẽ thông báo chính xác sau bước phác thảo.</div>
+      </div>
+      <div class="faq-item" data-hover>
+        <div class="faq-q">
+          <span>Shop có nhận đổi/trả không?</span>
+          <div class="faq-toggle"><i data-lucide="plus"></i></div>
+        </div>
+        <div class="faq-a">Mẫu có sẵn: đổi trong 7 ngày nếu chưa qua sử dụng và còn nguyên hộp. Mẫu custom theo yêu cầu cá nhân: không hỗ trợ đổi/trả nhưng được bảo hành trọn đời.</div>
+      </div>
+      <div class="faq-item" data-hover>
+        <div class="faq-q">
+          <span>Làm sao biết chính xác kích thước nhẫn của mình?</span>
+          <div class="faq-toggle"><i data-lucide="plus"></i></div>
+        </div>
+        <div class="faq-a">Bạn có thể đến trực tiếp showroom để đo miễn phí, hoặc tải bản size guide PDF (in ra, đo theo hướng dẫn). Nếu đặt online lần đầu, chúng tôi tặng kèm bộ vòng đo size để bạn an tâm.</div>
+      </div>
+      <div class="faq-item" data-hover>
+        <div class="faq-q">
+          <span>Thanh toán như thế nào? Có trả góp không?</span>
+          <div class="faq-toggle"><i data-lucide="plus"></i></div>
+        </div>
+        <div class="faq-a">Chấp nhận: VietQR, MoMo, VNPAY, thẻ tín dụng. Đơn từ 5 triệu có thể trả góp 0% qua thẻ tín dụng các ngân hàng đối tác (3–6 tháng).</div>
+      </div>
+      <div class="faq-item" data-hover>
+        <div class="faq-q">
+          <span>Bảo hành bao gồm những gì?</span>
+          <div class="faq-toggle"><i data-lucide="plus"></i></div>
+        </div>
+        <div class="faq-a">Bảo hành trọn đời: đánh bóng, làm sáng, sửa móc/khóa, mạ lại (với mẫu mạ). Miễn phí các dịch vụ trên. Phí thay đá hoặc gia công lại tính theo chất liệu thực tế.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="newsletter-bg"></div>
+  <div class="container">
+    <div class="newsletter-content reveal">
+      <h3>Nhận <em>cảm hứng</em> mỗi tuần</h3>
+      <p>Đăng ký nhận lookbook mới, sản phẩm giới hạn và ưu đãi riêng dành cho thành viên.</p>
+      <form class="newsletter-form" onsubmit="event.preventDefault(); this.querySelector('input').value=''; alert('Cảm ơn bạn đã đăng ký!');">
+        <input type="email" placeholder="email@cua-ban.com" required />
+        <button type="submit" data-hover>Đăng ký →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <h4>Bảo Tú <em>Nguyên</em></h4>
+        <p>Trang sức thủ công cao cấp — Bạc 925 & Vàng 18K. Mỗi tác phẩm là một câu chuyện được rèn nên bằng đôi tay nghệ nhân Việt.</p>
+        <div class="footer-social">
+          <a href="#" data-hover aria-label="Instagram"><i data-lucide="instagram"></i></a>
+          <a href="#" data-hover aria-label="Facebook"><i data-lucide="facebook"></i></a>
+          <a href="#" data-hover aria-label="TikTok"><i data-lucide="music"></i></a>
+          <a href="#" data-hover aria-label="Email"><i data-lucide="mail"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h5>Khám phá</h5>
+        <ul>
+          <li><a href="#" data-hover>Bộ sưu tập</a></li>
+          <li><a href="#" data-hover>Đặt riêng</a></li>
+          <li><a href="#" data-hover>Lookbook</a></li>
+          <li><a href="#" data-hover>Quà tặng</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Hỗ trợ</h5>
+        <ul>
+          <li><a href="#" data-hover>Size guide</a></li>
+          <li><a href="#" data-hover>Bảo quản</a></li>
+          <li><a href="#" data-hover>Đổi trả</a></li>
+          <li><a href="#" data-hover>FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Liên hệ</h5>
+        <ul>
+          <li><a href="#" data-hover>123 Nguyễn Huệ, Q1, TP.HCM</a></li>
+          <li><a href="#" data-hover>+84 909 999 999</a></li>
+          <li><a href="#" data-hover>hello@baotunguyen.com</a></li>
+          <li><a href="#" data-hover>9:00 – 21:00 hằng ngày</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div>© 2026 Bảo Tú Nguyễn. All rights reserved.</div>
+      <div>Crafted with ✦ in Sài Gòn</div>
+    </div>
+  </div>
+</footer>
+
+<!-- PRODUCT MODAL -->
+<div class="modal-backdrop" id="modalBackdrop"></div>
+<div class="modal" id="modal">
+  <button class="modal-close" id="modalClose" data-hover><i data-lucide="x"></i></button>
+  <div class="modal-grid">
+    <div class="modal-imgs">
+      <div class="modal-img-main" id="modalImgMain"><img src="" alt="" id="modalImg" /></div>
+      <div class="modal-thumbs" id="modalThumbs"></div>
+    </div>
+    <div class="modal-info">
+      <div class="modal-tag" id="modalTag">Mới</div>
+      <h2 class="modal-name" id="modalName">—</h2>
+      <div class="modal-price" id="modalPrice">—</div>
+      <div class="modal-story" id="modalStory">—</div>
+      <div class="modal-spec">
+        <h5>Thông số</h5>
+        <div class="modal-spec-row"><span>Chất liệu</span><span id="modalMaterial">—</span></div>
+        <div class="modal-spec-row"><span>Trọng lượng</span><span id="modalWeight">—</span></div>
+        <div class="modal-spec-row"><span>Bảo hành</span><span>Trọn đời</span></div>
+        <div class="modal-spec-row"><span>Thời gian giao</span><span>3–5 ngày</span></div>
+      </div>
+      <div class="modal-spec">
+        <h5>Size</h5>
+        <div class="modal-sizes">
+          <div class="size" data-hover>S</div>
+          <div class="size active" data-hover>M</div>
+          <div class="size" data-hover>L</div>
+          <div class="size" data-hover>XL</div>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button class="btn btn-primary" data-hover>Thêm vào giỏ</button>
+        <button class="btn btn-ghost" data-hover>Mua ngay</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Giỏ hàng <span style="color:var(--gold);">(2)</span></h3>
+    <button class="nav-icon" id="drawerClose" data-hover><i data-lucide="x"></i></button>
+  </div>
+  <div class="drawer-body">
+    <div class="cart-item">
+      <div class="cart-item-img"><img src="https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=200&q=80" alt="" /></div>
+      <div>
+        <div class="cart-item-name">Nhẫn Eternal</div>
+        <div class="cart-item-meta">Vàng 18K · Size M</div>
+        <div class="cart-item-price">12,500,000₫</div>
+      </div>
+      <button data-hover><i data-lucide="x" style="width:14px;color:var(--text-mute);"></i></button>
+    </div>
+    <div class="cart-item">
+      <div class="cart-item-img"><img src="https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?w=200&q=80" alt="" /></div>
+      <div>
+        <div class="cart-item-name">Bông tai Lune</div>
+        <div class="cart-item-meta">Bạc 925 · Size S</div>
+        <div class="cart-item-price">1,850,000₫</div>
+      </div>
+      <button data-hover><i data-lucide="x" style="width:14px;color:var(--text-mute);"></i></button>
+    </div>
+  </div>
+  <div class="drawer-foot">
+    <div class="cart-total"><span>Tổng cộng</span><span>14,350,000₫</span></div>
+    <button class="btn btn-primary" style="width:100%;" data-hover>Tiến hành thanh toán</button>
+  </div>
+</div>
+
+<script>
+/* ===========================
+   DATA
+   =========================== */
+const PRODUCTS = [
+  {
+    id: 1, name: "Nhẫn Eternal", tag: "Mới", material: "Vàng 18K", weight: "4.2g",
+    price: "12,500,000₫", oldPrice: null, cls: "p-1",
+    img: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=80",
+    imgs: [
+      "https://images.unsplash.com/photo-1605100804763-247f67b3557e?w=800&q=80",
+      "https://images.unsplash.com/photo-1602173574767-37ac01994b2a?w=800&q=80",
+      "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&q=80"
+    ],
+    story: "Lấy cảm hứng từ vòng tròn vô tận — biểu tượng của tình yêu không có điểm dừng. Mặt nhẫn được mài bóng thủ công 7 lần để đạt độ sáng gương."
+  },
+  {
+    id: 2, name: "Dây chuyền Aurora", tag: "Bán chạy", material: "Vàng 18K", weight: "6.8g",
+    price: "18,900,000₫", oldPrice: "21,000,000₫", cls: "p-2",
+    img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80",
+    imgs: ["https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800&q=80"],
+    story: "Aurora — ánh bình minh phương Bắc. Mỗi mắt xích được rèn riêng lẻ rồi nối tay, tạo độ rủ tự nhiên ôm trọn cổ."
+  },
+  {
+    id: 3, name: "Bông tai Lune", tag: "Limited", material: "Bạc 925", weight: "2.1g",
+    price: "1,850,000₫", oldPrice: null, cls: "p-3",
+    img: "https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?w=800&q=80",
+    imgs: ["https://images.unsplash.com/photo-1535632787350-4e68ef0ac584?w=800&q=80"],
+    story: "Lune nghĩa là 'mặt trăng' — đôi bông được tạo hình lưỡi liềm, biểu trưng cho sự dịu dàng và bí ẩn của ánh trăng đêm."
+  },
+  {
+    id: 4, name: "Vòng tay Helix", tag: null, material: "Bạc 925", weight: "8.5g",
+    price: "3,200,000₫", oldPrice: null, cls: "p-4",
+    img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80",
+    imgs: ["https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=800&q=80"],
+    story: "Helix lấy cảm hứng từ chuỗi DNA — hai vòng xoắn ôm vào nhau, ẩn dụ cho sự kết nối định mệnh."
+  },
+  {
+    id: 5, name: "Nhẫn Solace", tag: "Mới", material: "Vàng 18K · Đá", weight: "5.4g",
+    price: "24,800,000₫", oldPrice: null, cls: "p-5",
+    img: "https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&q=80",
+    imgs: ["https://images.unsplash.com/photo-1617038220319-276d3cfab638?w=800&q=80"],
+    story: "Solace — sự an ủi. Viên đá topaz xanh trung tâm được cắt theo phong cách cushion vintage, tỏa sáng dịu nhẹ trong mọi điều kiện ánh sáng."
+  },
+  {
+    id: 6, name: "Dây chuyền Nova", tag: null, material: "Bạc 925", weight: "3.7g",
+    price: "2,450,000₫", oldPrice: null, cls: "p-6",
+    img: "https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=800&q=80",
+    imgs: ["https://images.unsplash.com/photo-1611652022419-a9419f74343d?w=800&q=80"],
+    story: "Nova — vì sao mới sinh. Mặt dây hình ngôi sao 8 cánh được khắc tay từng đường, mỗi chiếc là một bản thể độc nhất."
+  }
+];
+
+/* ===========================
+   RENDER PRODUCTS
+   =========================== */
+const grid = document.querySelector('.product-grid');
+PRODUCTS.forEach(p => {
+  const card = document.createElement('div');
+  card.className = `product ${p.cls}`;
+  card.dataset.id = p.id;
+  card.setAttribute('data-hover-text', 'View');
+  card.innerHTML = `
+    <div class="product-img">
+      ${p.tag ? `<span class="product-tag">${p.tag}</span>` : ''}
+      <img src="${p.img}" alt="${p.name}" loading="lazy" />
+      <div class="product-actions">
+        <button class="product-action open-modal">Xem chi tiết</button>
+        <button class="product-action icon" aria-label="Yêu thích"><i data-lucide="heart"></i></button>
+      </div>
+    </div>
+    <h3 class="product-name">${p.name}</h3>
+    <div class="product-meta">
+      <span class="product-material">${p.material}</span>
+      <span class="product-price">${p.oldPrice ? `<s>${p.oldPrice}</s>` : ''}${p.price}</span>
+    </div>
+  `;
+  grid.appendChild(card);
+});
+
+/* ===========================
+   LUCIDE INIT
+   =========================== */
+lucide.createIcons();
+
+/* ===========================
+   LOADER
+   =========================== */
+window.addEventListener('load', () => {
+  setTimeout(() => document.getElementById('loader').classList.add('hidden'), 2200);
+});
+
+/* ===========================
+   CUSTOM CURSOR
+   =========================== */
+const cursorDot = document.getElementById('cursorDot');
+const cursorRing = document.getElementById('cursorRing');
+const cursorText = document.getElementById('cursorText');
+let mx = 0, my = 0, rx = 0, ry = 0;
+window.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; cursorDot.style.transform = `translate(${mx}px, ${my}px) translate(-50%,-50%)`; });
+function animateRing() {
+  rx += (mx - rx) * 0.18; ry += (my - ry) * 0.18;
+  cursorRing.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('[data-hover], a, button, .product, .look, .element').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursorRing.classList.add('hover');
+    const txt = el.dataset.hoverText || el.getAttribute('data-hover-text');
+    if (txt) { cursorText.textContent = txt; cursorRing.classList.add('text-mode'); }
+  });
+  el.addEventListener('mouseleave', () => {
+    cursorRing.classList.remove('hover', 'text-mode');
+  });
+});
+
+/* ===========================
+   NAV SCROLL
+   =========================== */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 80);
+});
+
+/* ===========================
+   REVEAL ON SCROLL
+   =========================== */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+}, { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+/* ===========================
+   PRODUCT MODAL
+   =========================== */
+const modal = document.getElementById('modal');
+const modalBackdrop = document.getElementById('modalBackdrop');
+const modalClose = document.getElementById('modalClose');
+const modalImg = document.getElementById('modalImg');
+const modalImgMain = document.getElementById('modalImgMain');
+
+function openModal(id) {
+  const p = PRODUCTS.find(x => x.id === id);
+  if (!p) return;
+  document.getElementById('modalName').textContent = p.name;
+  document.getElementById('modalPrice').textContent = p.price;
+  document.getElementById('modalTag').textContent = p.tag || 'Bộ sưu tập';
+  document.getElementById('modalMaterial').textContent = p.material;
+  document.getElementById('modalWeight').textContent = p.weight;
+  document.getElementById('modalStory').textContent = p.story;
+  modalImg.src = p.imgs[0];
+  const thumbs = document.getElementById('modalThumbs');
+  thumbs.innerHTML = '';
+  p.imgs.forEach((src, i) => {
+    const t = document.createElement('div');
+    t.className = 'modal-thumb' + (i === 0 ? ' active' : '');
+    t.innerHTML = `<img src="${src}" alt="" />`;
+    t.addEventListener('click', () => {
+      modalImg.src = src;
+      thumbs.querySelectorAll('.modal-thumb').forEach(x => x.classList.remove('active'));
+      t.classList.add('active');
+    });
+    thumbs.appendChild(t);
+  });
+  modal.classList.add('open');
+  modalBackdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  modal.classList.remove('open');
+  modalBackdrop.classList.remove('open');
+  modalImgMain.classList.remove('zoomed');
+  document.body.style.overflow = '';
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('.open-modal')) {
+    const card = e.target.closest('.product');
+    if (card) openModal(parseInt(card.dataset.id));
+  }
+});
+modalClose.addEventListener('click', closeModal);
+modalBackdrop.addEventListener('click', closeModal);
+modalImgMain.addEventListener('click', () => modalImgMain.classList.toggle('zoomed'));
+
+/* ===========================
+   SIZE PICKER
+   =========================== */
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('size')) {
+    e.target.parentElement.querySelectorAll('.size').forEach(s => s.classList.remove('active'));
+    e.target.classList.add('active');
+  }
+});
+
+/* ===========================
+   CART DRAWER
+   =========================== */
+const drawer = document.getElementById('drawer');
+document.getElementById('cartBtn').addEventListener('click', () => {
+  drawer.classList.add('open'); modalBackdrop.classList.add('open');
+});
+document.getElementById('drawerClose').addEventListener('click', () => {
+  drawer.classList.remove('open'); modalBackdrop.classList.remove('open');
+});
+modalBackdrop.addEventListener('click', () => drawer.classList.remove('open'));
+
+/* ===========================
+   FAQ ACCORDION
+   =========================== */
+document.querySelectorAll('.faq-item').forEach(item => {
+  item.querySelector('.faq-q').addEventListener('click', () => {
+    item.classList.toggle('open');
+  });
+});
+
+/* ===========================
+   FILTER (UI only)
+   =========================== */
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
+
+/* ===========================
+   ESC TO CLOSE
+   =========================== */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeModal();
+    drawer.classList.remove('open');
+    modalBackdrop.classList.remove('open');
+  }
+});
+</script>
+</body>
+</html>
