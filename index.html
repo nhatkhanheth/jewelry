@@ -83,6 +83,174 @@ button { font-family: inherit; cursor: none; border: none; background: none; col
 @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
 /* ===========================
+   CHECKOUT MODAL
+   =========================== */
+.checkout {
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0.95);
+  width: 92%; max-width: 560px; max-height: 92vh; overflow-y: auto;
+  background: var(--black); border: 1px solid var(--gold); z-index: 203;
+  opacity: 0; visibility: hidden; transition: all 0.5s var(--ease-out);
+  padding: 40px 36px;
+}
+.checkout.open { opacity: 1; visibility: visible; transform: translate(-50%, -50%) scale(1); }
+.checkout-close {
+  position: absolute; top: 16px; right: 16px; width: 40px; height: 40px;
+  border-radius: 50%; border: 1px solid var(--black-line); color: var(--text-mute);
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.3s;
+}
+.checkout-close:hover { border-color: var(--gold); color: var(--gold); transform: rotate(90deg); }
+
+.checkout-steps {
+  display: flex; gap: 8px; margin-bottom: 32px;
+}
+.checkout-step-bar {
+  flex: 1; height: 3px; background: var(--black-line); border-radius: 2px;
+  transition: background 0.4s;
+}
+.checkout-step-bar.active { background: var(--gold); }
+
+.checkout-eyebrow {
+  font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+  color: var(--gold); margin-bottom: 12px;
+}
+.checkout-title {
+  font-family: var(--serif); font-size: 32px; font-weight: 400;
+  margin-bottom: 8px; line-height: 1.1;
+}
+.checkout-sub { color: var(--text-mute); font-size: 14px; margin-bottom: 28px; }
+
+.checkout-panel { display: none; animation: panelIn 0.5s var(--ease-out); }
+.checkout-panel.active { display: block; }
+@keyframes panelIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+.form-row { margin-bottom: 16px; }
+.form-row.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-label {
+  display: block; font-size: 11px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text-mute); margin-bottom: 8px;
+}
+.form-input, .form-select {
+  width: 100%; background: var(--black-soft); border: 1px solid var(--black-line);
+  padding: 14px 16px; color: var(--cream); font-family: inherit; font-size: 14px;
+  transition: border-color 0.3s; outline: none; border-radius: 0;
+}
+.form-input:focus, .form-select:focus { border-color: var(--gold); }
+.form-input::placeholder { color: var(--text-mute); }
+
+.pay-methods { display: grid; gap: 10px; margin-bottom: 24px; }
+.pay-method {
+  display: flex; align-items: center; gap: 14px; padding: 14px 16px;
+  border: 1px solid var(--black-line); background: var(--black-soft);
+  cursor: none; transition: all 0.3s;
+}
+@media (max-width: 768px) { .pay-method { cursor: pointer; } }
+.pay-method:hover, .pay-method.selected { border-color: var(--gold); background: rgba(201,169,110,0.06); }
+.pay-method-radio {
+  width: 18px; height: 18px; border-radius: 50%; border: 1px solid var(--text-mute);
+  flex-shrink: 0; position: relative; transition: border-color 0.3s;
+}
+.pay-method.selected .pay-method-radio { border-color: var(--gold); }
+.pay-method.selected .pay-method-radio::after {
+  content: ''; position: absolute; top: 3px; left: 3px;
+  width: 10px; height: 10px; border-radius: 50%; background: var(--gold);
+}
+.pay-method-icon {
+  width: 40px; height: 40px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 11px;
+}
+.pay-method-icon.vietqr { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: #fff; }
+.pay-method-icon.momo { background: #a50064; color: #fff; }
+.pay-method-icon.vnpay { background: #005baa; color: #fff; }
+.pay-method-info { flex: 1; }
+.pay-method-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.pay-method-desc { font-size: 11px; color: var(--text-mute); }
+
+/* QR Display */
+.qr-box {
+  background: var(--cream); padding: 24px; text-align: center;
+  margin-bottom: 20px;
+}
+.qr-img {
+  width: 220px; height: 220px; margin: 0 auto 16px;
+  background: #fff; padding: 12px; border: 2px solid var(--gold);
+}
+.qr-img img { width: 100%; height: 100%; }
+.qr-amount {
+  font-family: var(--serif); font-size: 32px; color: var(--black);
+  font-weight: 500; margin-bottom: 4px;
+}
+.qr-note { font-size: 12px; color: #666; }
+.qr-info {
+  background: var(--black-soft); padding: 16px; border: 1px dashed var(--black-line);
+  margin-bottom: 20px;
+}
+.qr-info-row {
+  display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;
+}
+.qr-info-row span:first-child { color: var(--text-mute); }
+.qr-info-row span:last-child { font-family: 'Courier New', monospace; color: var(--gold); }
+.qr-timer {
+  text-align: center; font-size: 13px; color: var(--text-mute); margin-bottom: 16px;
+}
+.qr-timer span { color: var(--gold); font-weight: 600; font-family: 'Courier New', monospace; }
+
+/* Success */
+.success-icon {
+  width: 100px; height: 100px; margin: 0 auto 24px;
+  border-radius: 50%; background: rgba(201,169,110,0.15);
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  animation: successPulse 1.5s ease-in-out infinite;
+}
+@keyframes successPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(201,169,110,0.4); }
+  50% { box-shadow: 0 0 0 20px rgba(201,169,110,0); }
+}
+.success-icon svg { width: 48px; height: 48px; color: var(--gold); }
+.success-content { text-align: center; }
+.success-title {
+  font-family: var(--serif); font-size: 36px; font-weight: 400;
+  margin-bottom: 12px; color: var(--gold);
+}
+.success-text { color: var(--text-mute); margin-bottom: 24px; font-size: 14px; line-height: 1.7; }
+.success-order {
+  background: var(--black-soft); padding: 20px; margin-bottom: 24px;
+  border: 1px solid var(--black-line);
+}
+.success-order-id {
+  font-family: 'Courier New', monospace; font-size: 18px;
+  color: var(--gold); margin-bottom: 4px;
+}
+.success-order-label { font-size: 11px; color: var(--text-mute); letter-spacing: 0.2em; text-transform: uppercase; }
+
+.checkout-summary {
+  background: var(--black-soft); padding: 16px; margin-bottom: 24px;
+  border: 1px solid var(--black-line); border-radius: 0;
+}
+.checkout-summary-row {
+  display: flex; justify-content: space-between; padding: 6px 0; font-size: 13px;
+}
+.checkout-summary-row.total {
+  font-family: var(--serif); font-size: 20px; padding-top: 12px;
+  margin-top: 8px; border-top: 1px solid var(--black-line);
+}
+.checkout-summary-row.total span:last-child { color: var(--gold); }
+
+.checkout-actions { display: flex; gap: 10px; margin-top: 8px; }
+.checkout-actions .btn { flex: 1; padding: 16px; }
+
+/* Confetti */
+.confetti-piece {
+  position: fixed; width: 8px; height: 14px; pointer-events: none;
+  z-index: 9999; animation: confettiFall 3s ease-out forwards;
+}
+@keyframes confettiFall {
+  to { transform: translateY(120vh) rotate(720deg); opacity: 0; }
+}
+
+/* ===========================
    CUSTOM CURSOR
    =========================== */
 .cursor-dot, .cursor-ring {
@@ -111,13 +279,20 @@ button { font-family: inherit; cursor: none; border: none; background: none; col
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   padding: 24px 48px; display: flex; align-items: center; justify-content: space-between;
-  transition: background 0.4s var(--ease), backdrop-filter 0.4s, padding 0.4s;
-  mix-blend-mode: difference;
+  transition: background 0.4s var(--ease), padding 0.4s var(--ease), border-color 0.4s;
+  background: rgba(13, 13, 13, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid transparent;
+  /* Fix Safari iOS bounce scroll */
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  will-change: background, padding;
 }
 .nav.scrolled {
-  padding: 16px 48px; background: rgba(13, 13, 13, 0.85);
-  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-  mix-blend-mode: normal; border-bottom: 1px solid var(--black-line);
+  padding: 16px 48px;
+  background: rgba(13, 13, 13, 0.92);
+  border-bottom-color: var(--black-line);
 }
 .nav-logo {
   font-family: var(--serif); font-size: 26px; font-weight: 500;
@@ -139,6 +314,7 @@ button { font-family: inherit; cursor: none; border: none; background: none; col
   width: 40px; height: 40px; border: 1px solid rgba(250, 248, 244, 0.2);
   border-radius: 50%; display: flex; align-items: center; justify-content: center;
   transition: all 0.3s var(--ease); position: relative;
+  background: transparent;
 }
 .nav-icon:hover { border-color: var(--gold); background: rgba(201, 169, 110, 0.1); }
 .nav-icon svg { width: 16px; height: 16px; }
@@ -150,9 +326,12 @@ button { font-family: inherit; cursor: none; border: none; background: none; col
 }
 .menu-toggle { display: none; }
 @media (max-width: 900px) {
-  .nav { padding: 16px 20px; }
+  .nav { padding: 14px 20px; }
   .nav-menu { display: none; }
   .menu-toggle { display: flex; }
+  .nav-logo { font-size: 20px; }
+  .nav-icon { width: 36px; height: 36px; }
+  .nav-icon svg { width: 14px; height: 14px; }
 }
 
 /* ===========================
@@ -1322,6 +1501,153 @@ section { position: relative; }
     </div>
   </div>
 </div>
+<!-- CHECKOUT MODAL -->
+<div class="checkout" id="checkout">
+  <button class="checkout-close" id="checkoutClose" data-hover><i data-lucide="x"></i></button>
+
+  <div class="checkout-steps">
+    <div class="checkout-step-bar active" data-step="1"></div>
+    <div class="checkout-step-bar" data-step="2"></div>
+    <div class="checkout-step-bar" data-step="3"></div>
+  </div>
+
+  <!-- STEP 1: Địa chỉ -->
+  <div class="checkout-panel active" data-panel="1">
+    <div class="checkout-eyebrow">Bước 1 / 3</div>
+    <h2 class="checkout-title">Địa chỉ giao hàng</h2>
+    <p class="checkout-sub">Thông tin sẽ được lưu cho lần mua tiếp theo.</p>
+
+    <div class="form-row two">
+      <div>
+        <label class="form-label">Họ và tên</label>
+        <input class="form-input" type="text" placeholder="Nhất Khanh" value="Nhất Khanh" />
+      </div>
+      <div>
+        <label class="form-label">Số điện thoại</label>
+        <input class="form-input" type="tel" placeholder="0909 xxx xxx" value="0909123456" />
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Email (nhận hóa đơn)</label>
+      <input class="form-input" type="email" placeholder="email@example.com" value="hello@baotunguyen.com" />
+    </div>
+    <div class="form-row">
+      <label class="form-label">Địa chỉ</label>
+      <input class="form-input" type="text" placeholder="Số nhà, đường, phường" value="123 Nguyễn Huệ, P. Bến Nghé" />
+    </div>
+    <div class="form-row two">
+      <div>
+        <label class="form-label">Tỉnh / Thành</label>
+        <select class="form-select">
+          <option>TP. Hồ Chí Minh</option>
+          <option>Hà Nội</option>
+          <option>Đà Nẵng</option>
+        </select>
+      </div>
+      <div>
+        <label class="form-label">Quận / Huyện</label>
+        <select class="form-select">
+          <option>Quận 1</option>
+          <option>Quận 3</option>
+          <option>Quận 7</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <label class="form-label">Ghi chú (tùy chọn)</label>
+      <input class="form-input" type="text" placeholder="Khắc tên, gói quà..." />
+    </div>
+
+    <div class="checkout-summary">
+      <div class="checkout-summary-row"><span>Tạm tính</span><span>14,350,000₫</span></div>
+      <div class="checkout-summary-row"><span>Phí giao hàng</span><span style="color:var(--gold);">Miễn phí</span></div>
+      <div class="checkout-summary-row total"><span>Tổng cộng</span><span>14,350,000₫</span></div>
+    </div>
+
+    <button class="btn btn-primary" style="width:100%;" data-hover onclick="goStep(2)">Tiếp tục →</button>
+  </div>
+
+  <!-- STEP 2: Payment -->
+  <div class="checkout-panel" data-panel="2">
+    <div class="checkout-eyebrow">Bước 2 / 3</div>
+    <h2 class="checkout-title">Thanh toán</h2>
+    <p class="checkout-sub">Chọn phương thức và quét mã QR.</p>
+
+    <div class="pay-methods">
+      <div class="pay-method selected" data-method="vietqr" data-hover>
+        <div class="pay-method-radio"></div>
+        <div class="pay-method-icon vietqr">QR</div>
+        <div class="pay-method-info">
+          <div class="pay-method-name">VietQR — Chuyển khoản</div>
+          <div class="pay-method-desc">0% phí · Tự động xác nhận trong 30 giây</div>
+        </div>
+      </div>
+      <div class="pay-method" data-method="momo" data-hover>
+        <div class="pay-method-radio"></div>
+        <div class="pay-method-icon momo">M</div>
+        <div class="pay-method-info">
+          <div class="pay-method-name">Ví MoMo</div>
+          <div class="pay-method-desc">Quét bằng app MoMo · 1.5% phí</div>
+        </div>
+      </div>
+      <div class="pay-method" data-method="vnpay" data-hover>
+        <div class="pay-method-radio"></div>
+        <div class="pay-method-icon vnpay">VN</div>
+        <div class="pay-method-info">
+          <div class="pay-method-name">VNPAY — Thẻ ATM/Visa</div>
+          <div class="pay-method-desc">Thẻ nội địa + quốc tế · 2% phí</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qr-box">
+      <div class="qr-img">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=BaoTuNguyen-DH26051-14350000&color=0D0D0D&bgcolor=FAF8F4" alt="QR Code" />
+      </div>
+      <div class="qr-amount">14,350,000₫</div>
+      <div class="qr-note">Quét bằng app ngân hàng để thanh toán</div>
+    </div>
+
+    <div class="qr-info">
+      <div class="qr-info-row"><span>Ngân hàng</span><span>VIETCOMBANK</span></div>
+      <div class="qr-info-row"><span>Số tài khoản</span><span>1234567890</span></div>
+      <div class="qr-info-row"><span>Chủ tài khoản</span><span>BAO TU NGUYEN</span></div>
+      <div class="qr-info-row"><span>Nội dung</span><span>DH26051</span></div>
+    </div>
+
+    <div class="qr-timer">Mã QR còn hiệu lực trong <span id="qrTimer">14:59</span></div>
+
+    <div class="checkout-actions">
+      <button class="btn btn-ghost" data-hover onclick="goStep(1)">← Quay lại</button>
+      <button class="btn btn-primary" data-hover onclick="simulatePayment()">Tôi đã thanh toán</button>
+    </div>
+  </div>
+
+  <!-- STEP 3: Success -->
+  <div class="checkout-panel" data-panel="3">
+    <div class="success-content">
+      <div class="success-icon"><i data-lucide="check"></i></div>
+      <h2 class="success-title">Thanh toán thành công</h2>
+      <p class="success-text">Cảm ơn bạn đã đặt hàng tại Bảo Tú Nguyên.<br/>Đơn hàng sẽ được chế tác và giao trong 3–5 ngày.</p>
+
+      <div class="success-order">
+        <div class="success-order-id">#DH26051</div>
+        <div class="success-order-label">Mã đơn hàng</div>
+      </div>
+
+      <div class="checkout-summary">
+        <div class="checkout-summary-row"><span>Tên</span><span>Nhất Khanh</span></div>
+        <div class="checkout-summary-row"><span>Số điện thoại</span><span>0909 123 456</span></div>
+        <div class="checkout-summary-row"><span>Phương thức</span><span>VietQR</span></div>
+        <div class="checkout-summary-row total"><span>Đã thanh toán</span><span>14,350,000₫</span></div>
+      </div>
+
+      <p class="success-text" style="font-size:12px;">Email xác nhận đã gửi tới <span style="color:var(--gold);">hello@baotunguyen.com</span></p>
+
+      <button class="btn btn-primary" style="width:100%;margin-top:8px;" data-hover onclick="closeCheckout()">Hoàn tất</button>
+    </div>
+  </div>
+</div>
 
 <!-- CART DRAWER -->
 <div class="drawer" id="drawer">
@@ -1407,6 +1733,96 @@ const PRODUCTS = [
     story: "Nova — vì sao mới sinh. Mặt dây hình ngôi sao 8 cánh được khắc tay từng đường, mỗi chiếc là một bản thể độc nhất."
   }
 ];
+
+/* ===========================
+   CHECKOUT DEMO FLOW
+   =========================== */
+const checkoutModal = document.getElementById('checkout');
+const checkoutCloseBtn = document.getElementById('checkoutClose');
+
+function openCheckout() {
+  drawer.classList.remove('open');
+  checkoutModal.classList.add('open');
+  modalBackdrop.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  goStep(1);
+  startQrTimer();
+}
+function closeCheckout() {
+  checkoutModal.classList.remove('open');
+  modalBackdrop.classList.remove('open');
+  document.body.style.overflow = '';
+  stopQrTimer();
+}
+function goStep(n) {
+  document.querySelectorAll('.checkout-step-bar').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.step) <= n);
+  });
+  document.querySelectorAll('.checkout-panel').forEach(p => {
+    p.classList.toggle('active', parseInt(p.dataset.panel) === n);
+  });
+  checkoutModal.scrollTop = 0;
+}
+
+// Payment method selection
+document.querySelectorAll('.pay-method').forEach(m => {
+  m.addEventListener('click', () => {
+    document.querySelectorAll('.pay-method').forEach(x => x.classList.remove('selected'));
+    m.classList.add('selected');
+  });
+});
+
+// QR Timer
+let qrInterval = null;
+function startQrTimer() {
+  let seconds = 15 * 60;
+  const el = document.getElementById('qrTimer');
+  stopQrTimer();
+  qrInterval = setInterval(() => {
+    seconds--;
+    if (seconds < 0) { stopQrTimer(); return; }
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  }, 1000);
+}
+function stopQrTimer() {
+  if (qrInterval) { clearInterval(qrInterval); qrInterval = null; }
+}
+
+// Simulate payment success
+function simulatePayment() {
+  goStep(3);
+  fireConfetti();
+  lucide.createIcons();
+}
+
+// Confetti
+function fireConfetti() {
+  const colors = ['#C9A96E', '#E5C88A', '#FAF8F4', '#C0C0C8'];
+  for (let i = 0; i < 60; i++) {
+    const piece = document.createElement('div');
+    piece.className = 'confetti-piece';
+    piece.style.left = Math.random() * 100 + 'vw';
+    piece.style.top = '-20px';
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+    piece.style.animationDelay = (Math.random() * 0.5) + 's';
+    piece.style.animationDuration = (2.5 + Math.random() * 1.5) + 's';
+    piece.style.transform = `rotate(${Math.random() * 360}deg)`;
+    document.body.appendChild(piece);
+    setTimeout(() => piece.remove(), 4000);
+  }
+}
+
+checkoutCloseBtn.addEventListener('click', closeCheckout);
+
+// Hook nút "Tiến hành thanh toán" trong drawer
+document.querySelector('.drawer-foot .btn').addEventListener('click', openCheckout);
+
+// ESC để đóng checkout
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && checkoutModal.classList.contains('open')) closeCheckout();
+});
 
 /* ===========================
    RENDER PRODUCTS
